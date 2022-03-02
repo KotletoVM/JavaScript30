@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Letter</title>
+</head>
+<style>
+    :root {
+        --background: 100%;
+    }
+    html {
+        height: 100%;
+    }
+    body {
+        background-color: rgb(var(--background), 100%, var(--background));
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+    }
+    .text_content {
+        background-color: #D8D8D8;
+        position: relative;
+        max-width: 800px;
+        padding: 30px;
+        border: 3px solid darkgray;
+        border-radius: 20px;
+        box-shadow: 0 0 10px #000000;
+    }
+    .text {
+        display: inline;
+        font-family: 'Roboto Serif', sans-serif;
+        font-size: 30px;
+    }
+    .str_out {
+        background-color: #00AA00;
+        color: white;
+    }
+    .str_in {
+        background-color: #D8D8D8;
+    }
+</style>
+<body>
+<div class="text_content">
+    <div class="text str_out"></div><div class="text str_in"></div>
+</div>
+<script>
+    let root = document.documentElement;
+    let current_background = 100;
+    const text = "The coin hovered in the air, spinning over and over again. It reached its peak and began to descend. Both boys were pleading with it to land a certain way but the coin had already made up its mind on what it was going to do.";
+    let minus = 30 / text.length;
+    let letter_index = 0;
+    const str_out = document.querySelector('.str_out');
+    const str_in = document.querySelector('.str_in');
+    str_in.textContent = text;
+    window.addEventListener('keypress', e => {
+        console.log(text[letter_index]);
+        if (text[letter_index] === e.key) {
+            str_out.textContent += text[letter_index];
+            str_in.textContent = text.slice(letter_index + 1);
+            letter_index++;
+            current_background -= minus;
+            root.style.setProperty('--background', current_background + "%");
+        }
+    })
+</script>
+</body>
+</html>
