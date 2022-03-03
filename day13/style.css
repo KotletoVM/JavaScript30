@@ -1,0 +1,55 @@
+html {
+    height: 100%;
+    font-family: "Roboto Serif", sans-serif;
+    background: #15151E;
+    color: #D2D2D6;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.main {
+    background: #1E1E27;
+    width: 60%;
+    max-width: 1000px;
+    min-width: 500px;
+    margin: 0 auto;
+    min-height: 100%;
+}
+
+.scroll_value {
+    position: fixed;
+    top: 0;
+    width: inherit;
+    max-width: inherit;
+    min-width: inherit;
+    background: #15151E;
+    display: flex;
+    flex-basis: 100%;
+    height: 10px;
+}
+
+.scroll_value__filled {
+    background: #ffc600;
+    flex: 0;
+    flex-basis: 0%;
+    transition: 0.4ms;
+    transition-delay: 0.2ms;
+}
+
+.paragraph {
+    padding-top: 30px;
+    padding-right: 40px;
+    padding-left: 40px;
+}
+
+.paragraph h1 {
+    margin-top: 0;
+}
+
+.paragraph_content {
+    line-height: 30px;
+    font-size: larger;
+}
