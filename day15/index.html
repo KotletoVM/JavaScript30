@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TaskList</title>
+    <style>
+        * {
+            font-size: 18px;
+        }
+        html {
+            height: 100%;
+            font-family: 'Roboto Serif', sans-serif;
+        }
+        body {
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .task-list-box {
+            width: 50%;
+            min-width: 200px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            border: 1px solid #D2D2D6;
+            overflow: hidden;
+        }
+        .task-list {
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: scroll;
+        }
+        .task-list::-webkit-scrollbar { width: 0; }
+        .uncompleted {
+            border-right: 1px solid #D2D2D6;
+        }
+        .completed p {
+            text-decoration: line-through;
+            color: darkgray;
+        }
+        .add-task {
+            display: flex;
+            justify-content: space-between;
+            grid-column-start: 1;
+            grid-column-end: 3;
+        }
+        .add-task input[type="text"] {
+            border: 0;
+            border-top: 1px solid #D2D2D6;
+            width: 100%;
+        }
+        .add-task input[type="submit"] {
+            margin: 0;
+            background-color: #04AA6D;
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .task {
+            align-items: center;
+            width: 100%;
+            display: flex;
+            border-bottom: 1px solid #D2D2D6;
+        }
+        .task input {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="task-list-box">
+        <div class="task-list uncompleted"></div>
+        <div class="task-list completed"></div>
+        <form class="add-task">
+            <input type="text">
+            <input type="submit" value="+ Add item">
+        </form>
+    </div>
+    <script>
+        const addTaskForm = document.querySelector('.add-task');
+
+        let tasks = JSON.parse(localStorage.getItem('items')) || [];
+
+        const uncompletedList = document.querySelector('.task-list.uncompleted');
+        const completedList = document.querySelector('.task-list.completed');
+
+        function addTask(e) {
+            e.preventDefault();
+            const text = this.querySelector('[type="text"]').value;
+            if (!text) return null;
+            const task = {text, completed: false};
+            tasks.push(task);
+            addTaskToHTML(tasks.length - 1, task, uncompletedList);
+            this.reset();
+            localStorage.setItem('items', JSON.stringify(tasks));
+        }
+
+        function addTaskToHTML(i, task, list){
+            list.innerHTML = `<div class="task">
+                <input type="checkbox" data-index="${i}">
+                <p>${task.text}</p>
+            </div>` + list.innerHTML;
+        }
+
+        function populateLists(tasks = [], uncompletedList, completedList){
+            tasks.map((task, i) => {
+                if (!task.completed){
+                    uncompletedList.innerHTML = `<div class="task">
+                <input type="checkbox" data-index="${i}">
+                <p>${task.text}</p>
+            </div>` + uncompletedList.innerHTML;
+                }
+                else {
+                    completedList.innerHTML = `<div class="task">
+                <input type="checkbox" data-index="${i}" checked>
+                <p>${task.text}</p>
+            </div>` + completedList.innerHTML;
+                }
+            });
+        }
+
+        function completeTask(e) {
+            if (!e.target.matches('input')) return;
+            const task = e.target.parentNode;
+            task.querySelector('input').setAttribute('checked', '');
+            completedList.innerHTML += task.outerHTML;
+            task.outerHTML = '';
+            tasks[e.target.dataset.index].completed = true;
+            localStorage.setItem('items', JSON.stringify(tasks));
+        }
+
+        function uncompleteTask(e) {
+            if (!e.target.matches('input')) return;
+            const task = e.target.parentNode;
+            task.querySelector('input').attributes.removeNamedItem('checked');
+            uncompletedList.innerHTML += task.outerHTML;
+            task.outerHTML = '';
+            tasks[e.target.dataset.index].completed = false;
+            localStorage.setItem('items', JSON.stringify(tasks));
+        }
+
+        populateLists(tasks, uncompletedList, completedList);
+
+        addTaskForm.addEventListener('submit', addTask);
+        uncompletedList.addEventListener('click', completeTask);
+        completedList.addEventListener('click', uncompleteTask);
+    </script>
+</body>
+</html>
